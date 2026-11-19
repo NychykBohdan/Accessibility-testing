@@ -1,0 +1,106 @@
+[
+  {
+    "id": "color-contrast",
+    "impact": "serious",
+    "tags": ["cat.color", "wcag2aa", "wcag143"],
+    "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast",
+    "nodes": [
+      {
+        "target": [".error-message"],
+        "html": "<h3>",
+        "impact": "serious",
+        "any": [],
+        "all": [],
+        "none": []
+      },
+      {
+        "target": [".footer_copy"],
+        "html": "<div>",
+        "impact": "serious",
+        "any": [],
+        "all": [],
+        "none": []
+      },
+      {
+        "target": ["#item_4_title_link"],
+        "html": "<a>",
+        "impact": "serious",
+        "any": [],
+        "all": [],
+        "none": []
+      },
+      {
+        "target": ["#item_0_title_link"],
+        "html": "<a>",
+        "impact": "serious",
+        "any": [],
+        "all": [],
+        "none": []
+      },
+      {
+        "target": ["#item_1_title_link"],
+        "html": "<a>",
+        "impact": "serious",
+        "any": [],
+        "all": [],
+        "none": []
+      }
+    ]
+  },
+  {
+    "id": "aria-hidden-focus",
+    "impact": "minor",
+    "tags": ["cat.name-role-value", "wcag2a", "wcag412"],
+    "description": "Ensure aria-hidden elements are not focusable nor contain focusable elements",
+    "help": "ARIA hidden element must not be focusable or contain focusable elements",
+    "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/aria-hidden-focus",
+    "nodes": [
+      {
+        "target": [["iframe#widget", "#shadow-host", ".menu"]],
+        "html": "<div aria-hidden=\"true\">",
+        "impact": "minor",
+        "any": [],
+        "all": [],
+        "none": []
+      }
+    ]
+  },
+  {
+    "id": "image-alt",
+    "impact": "critical",
+    "tags": ["cat.text-alternatives", "wcag2a", "wcag111"],
+    "description": "Ensure <img> elements have alternative text or a role of none or presentation",
+    "help": "Images must have alternative text",
+    "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/image-alt",
+    "nodes": [
+      {
+        "target": ["img.logo"],
+        "html": "<img class=\"logo\">",
+        "impact": "critical",
+        "any": [],
+        "all": [],
+        "none": []
+      }
+    ]
+  },
+  {
+    "id": "label",
+    "impact": "moderate",
+    "tags": ["cat.forms", "wcag2a", "wcag412"],
+    "description": "Ensure every form element has a label",
+    "help": "Form elements must have labels",
+    "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label",
+    "nodes": [
+      {
+        "target": ["#postal-code"],
+        "html": "<input>",
+        "impact": "moderate",
+        "any": [],
+        "all": [],
+        "none": []
+      }
+    ]
+  }
+]

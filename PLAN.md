@@ -34,13 +34,13 @@
 
 ## Фаза 2. Ядро a11y: фікстура, сканування, форматування
 
-- [ ] `src/a11y/axe.fixture.ts`: фікстура `makeAxeBuilder()` з тегами WCAG 2.1 AA
-- [ ] `src/a11y/scan.ts`: `a11yScan(page, scanKey, { include?, exclude? })` →
+- [x] `src/a11y/axe.fixture.ts`: фікстура `makeAxeBuilder()` з тегами WCAG 2.1 AA
+- [x] `src/a11y/scan.ts`: `a11yScan(page, scanKey, { include?, exclude? })` →
       запускає axe, групує порушення за impact, прикріплює JSON до звіту,
       пише `reports/a11y-results/<scanKey>.json`
-- [ ] `src/a11y/format.ts`: людиночитний вивід (rule id, impact, help, helpUrl, перші 3 target-селектори)
+- [x] `src/a11y/format.ts`: людиночитний вивід (rule id, impact, help, helpUrl, перші 3 target-селектори)
       для повідомлень у `expect` та анотацій
-- [ ] Unit-тести для `format.ts` (на фіксованому JSON axe)
+- [x] Unit-тести для `format.ts` (на фіксованому JSON axe)
 
 **Критерії:** тестовий скан сторінки логіну створює JSON-файл і вкладення у HTML-звіті.
 

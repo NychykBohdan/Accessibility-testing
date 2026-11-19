@@ -21,8 +21,24 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    // Pure Node unit tests of the framework helpers (no browser is launched).
+    { name: 'unit', testDir: './tests/unit' },
+    // axe scans run in chromium only: the baseline is chromium-based and axe results
+    // differ between engines. Keyboard and smoke tests run in all three browsers.
+    {
+      name: 'chromium',
+      testIgnore: ['**/unit/**'],
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      testIgnore: ['**/unit/**', '**/a11y/**'],
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      testIgnore: ['**/unit/**', '**/a11y/**'],
+      use: { ...devices['Desktop Safari'] },
+    },
   ],
 });
