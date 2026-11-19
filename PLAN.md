@@ -48,13 +48,13 @@
 
 ## Фаза 3. Baseline відомих порушень
 
-- [ ] `src/a11y/baseline.ts`: формат `{ [scanKey]: string[] /* rule ids */ }`
-- [ ] Логіка порівняння: `new` (немає в baseline), `known`, `fixed` (є в baseline, але зникли)
-- [ ] Тест падає лише на `new` з impact `critical`/`serious`; `moderate`/`minor` → анотація `warning`;
+- [x] `src/a11y/baseline.ts`: формат `{ [scanKey]: string[] /* rule ids */ }`
+- [x] Логіка порівняння: `new` (немає в baseline), `known`, `fixed` (є в baseline, але зникли)
+- [x] Тест падає лише на `new` з impact `critical`/`serious`; `moderate`/`minor` → анотація `warning`;
       `fixed` → анотація `fixed-since-baseline`
-- [ ] Режим `UPDATE_A11Y_BASELINE=1` (скрипт `baseline:update`) — перезаписує baseline,
+- [x] Режим `UPDATE_A11Y_BASELINE=1` (скрипт `baseline:update`) — перезаписує baseline,
       запускаючи сканування лише в chromium, з детермінованим сортуванням
-- [ ] Unit-тести для порівняння baseline
+- [x] Unit-тести для порівняння baseline
 
 **Критерії:** після `baseline:update` усі a11y-тести зелені; штучно додане порушення
 (напр. `<img>` без alt через `page.evaluate`) у окремому тесті-доказі робить скан червоним.
