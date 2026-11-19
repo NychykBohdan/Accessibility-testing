@@ -65,13 +65,13 @@
 
 `tests/a11y/pages.a11y.spec.ts` — по одному тесту на сторінку:
 
-- [ ] `login`
-- [ ] `inventory`
-- [ ] `item`
-- [ ] `cart` (з товаром)
-- [ ] `checkout-step-one`
-- [ ] `checkout-step-two`
-- [ ] `checkout-complete`
+- [x] `login`
+- [x] `inventory`
+- [x] `item`
+- [x] `cart` (з товаром)
+- [x] `checkout-step-one`
+- [x] `checkout-step-two`
+- [x] `checkout-complete`
 
 **Критерії:** 7 сканувань, усі ключі є в baseline, звіт містить JSON для кожного.
 
