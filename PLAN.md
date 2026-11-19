@@ -23,10 +23,10 @@
 
 ## Фаза 1. Page Objects
 
-- [ ] `LoginPage` (поля, кнопка, повідомлення про помилку, `login(user, pass)`)
-- [ ] `InventoryPage` (список товарів, сортування, кнопка бургер-меню, меню, кошик)
-- [ ] `ItemPage`, `CartPage`, `CheckoutStepOnePage`, `CheckoutStepTwoPage`, `CheckoutCompletePage`
-- [ ] Фікстура `loggedInPage` (логін через UI один раз; за можливості — `storageState`)
+- [x] `LoginPage` (поля, кнопка, повідомлення про помилку, `login(user, pass)`)
+- [x] `InventoryPage` (список товарів, сортування, кнопка бургер-меню, меню, кошик)
+- [x] `ItemPage`, `CartPage`, `CheckoutStepOnePage`, `CheckoutStepTwoPage`, `CheckoutCompletePage`
+- [x] Фікстура `loggedInPage` (логін через UI один раз; за можливості — `storageState`)
 
 **Критерії:** smoke-тест проходить повний шлях покупки через Page Objects.
 
