@@ -81,12 +81,12 @@
 
 `tests/a11y/states.a11y.spec.ts`:
 
-- [ ] `login:error` — порожня форма / неправильний пароль
-- [ ] `login:locked-user` — `locked_out_user`
-- [ ] `inventory:menu-open` — відкрите бургер-меню (скан тільки меню через `include`)
-- [ ] `inventory:sorted` — після зміни сортування
-- [ ] `checkout-step-one:validation-errors`
-- [ ] `cart:empty`
+- [x] `login:error` — порожня форма / неправильний пароль
+- [x] `login:locked-user` — `locked_out_user`
+- [x] `inventory:menu-open` — відкрите бургер-меню (скан тільки меню через `include`)
+- [x] `inventory:sorted` — після зміни сортування
+- [x] `checkout-step-one:validation-errors`
+- [x] `cart:empty`
 
 **Критерії:** кожен стан чекає на конкретний локатор перед сканом; жодного `waitForTimeout`.
 

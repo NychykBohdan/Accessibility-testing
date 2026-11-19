@@ -1,9 +1,16 @@
 {
   "cart": [],
+  "cart:empty": [],
   "checkout-complete": [],
   "checkout-step-one": [],
+  "checkout-step-one:validation-errors": [],
   "checkout-step-two": [],
   "inventory": [],
+  "inventory:menu-open": [],
+  "inventory:sorted": [],
   "item": [],
-  "login": []
+  "login": [],
+  "login:error": [],
+  "login:error:wrong-password": [],
+  "login:locked-user": []
 }
