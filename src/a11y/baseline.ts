@@ -16,7 +16,7 @@ export const BASELINE_FILE = path.resolve('a11y-baseline.json');
 export const UPDATE_BASELINE_ENV = 'UPDATE_A11Y_BASELINE';
 
 /** Playwright projects whose scans form the baseline. */
-export const BASELINE_PROJECTS: readonly string[] = ['chromium'];
+export const BASELINE_PROJECTS: readonly string[] = ['chromium', 'mobile-chromium'];
 
 /** New violations with these impacts fail the test; others only produce warnings. */
 export const BLOCKING_IMPACTS: readonly Impact[] = ['critical', 'serious'];

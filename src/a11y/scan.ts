@@ -82,14 +82,27 @@ function annotate(
   }
 }
 
+/**
+ * Appends the project's variant (e.g. `@mobile` from `metadata.a11yVariant`) so that the same
+ * test produces separate baseline keys per viewport / emulation.
+ */
+export function resolveScanKey(scanKey: string, variant: unknown): string {
+  if (typeof variant !== 'string' || variant === '') return scanKey;
+  if (scanKey.includes('@')) {
+    throw new Error(`scanKey "${scanKey}" already has a variant; project adds "@${variant}"`);
+  }
+  return `${scanKey}@${variant}`;
+}
+
 export async function runA11yScan({
   page,
   builder,
   testInfo,
-  scanKey,
+  scanKey: requestedKey,
   tags,
   options = {},
 }: RunScanParams): Promise<ScanReport> {
+  const scanKey = resolveScanKey(requestedKey, testInfo.project.metadata.a11yVariant);
   if (!SCAN_KEY_PATTERN.test(scanKey)) {
     throw new Error(`Invalid scanKey "${scanKey}". Use kebab-case segments separated by ":".`);
   }

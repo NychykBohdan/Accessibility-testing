@@ -51,11 +51,13 @@ jobs:
       - run: npm ci
       - name: Install Playwright browser
         run: npx playwright install --with-deps ${{ matrix.browser }}
-      # The chromium job also runs the unit tests and is the only one with axe scans.
+      # The chromium job also runs the unit tests, the mobile-viewport axe scans and the visual
+      # focus tests. Focus snapshots are only committed for win32 so far, hence --ignore-snapshots
+      # (pixel "changes appearance" checks do not need stored snapshots and still run).
       - name: Run tests
         run: >-
           npx playwright test --project=${{ matrix.browser }}
-          ${{ matrix.browser == 'chromium' && '--project=unit' || '' }}
+          ${{ matrix.browser == 'chromium' && '--project=unit --project=mobile-chromium --ignore-snapshots' || '' }}
       - name: Upload blob report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
