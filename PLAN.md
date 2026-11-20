@@ -110,11 +110,11 @@
 
 ## Фаза 7. Звітність
 
-- [ ] `scripts/a11y-summary.ts`: читає `reports/a11y-results/*.json` →
+- [x] `scripts/a11y-summary.ts`: читає `reports/a11y-results/*.json` →
       `reports/a11y-summary.md`: таблиця scanKey × (critical / serious / moderate / minor),
       топ-правил за кількістю, посилання на helpUrl
-- [ ] Вивід зведення в `$GITHUB_STEP_SUMMARY`, якщо змінна доступна
-- [ ] Індексна HTML-сторінка для GitHub Pages: посилання на HTML-звіт Playwright і зведення
+- [x] Вивід зведення в `$GITHUB_STEP_SUMMARY`, якщо змінна доступна
+- [x] Індексна HTML-сторінка для GitHub Pages: посилання на HTML-звіт Playwright і зведення
 
 **Критерії:** `npm test && npm run a11y:summary` локально генерує коректне зведення.
 
