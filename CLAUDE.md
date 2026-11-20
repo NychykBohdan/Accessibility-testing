@@ -66,7 +66,7 @@ npm run typecheck              # tsc --noEmit
 ├── tests/
 │   ├── unit/                   # *.unit.spec.ts — unit-тести хелперів (проєкт `unit`)
 │   ├── smoke/                  # *.smoke.spec.ts — шлях покупки через Page Objects
-│   ├── a11y/                   # *.a11y.spec.ts — axe-сканування сторінок і станів (лише chromium)
+│   ├── a11y/                   # *.a11y.spec.ts — axe-сканування сторінок і станів (chromium + mobile-chromium)
 │   ├── keyboard/               # *.keyboard.spec.ts — навігація з клавіатури
 │   ├── media/                  # *.media.spec.ts — prefers-reduced-motion, forced-colors
 │   ├── visual/                 # *.visual.spec.ts — фокус-стани (лише chromium), еталони в __screenshots__/<platform>
