@@ -32,6 +32,7 @@ npm run test:headed            # з UI браузера
 npm run report                 # відкрити HTML-звіт Playwright
 npm run a11y:summary           # згенерувати reports/a11y-summary.md з JSON-результатів
 npm run baseline:update        # перезаписати a11y-baseline.json поточними порушеннями
+npm run pages:build            # зібрати site/ (індекс + HTML-звіт + зведення) для GitHub Pages
 npm run lint                   # ESLint
 npm run format                 # Prettier
 npm run typecheck              # tsc --noEmit
@@ -51,17 +52,25 @@ npm run typecheck              # tsc --noEmit
 ├── playwright.config.ts
 ├── src/
 │   ├── config/env.ts           # BASE_URL, облікові дані демо-юзера
+│   ├── fixtures/pages.fixture.ts # фікстури Page Objects + loggedInPage
 │   ├── a11y/
 │   │   ├── axe.fixture.ts      # фікстура makeAxeBuilder + a11yScan
 │   │   ├── scan.ts             # логіка сканування, фільтр за impact, attach у звіт
 │   │   ├── baseline.ts         # читання/порівняння/оновлення baseline
-│   │   └── format.ts           # людиночитне форматування порушень
+│   │   ├── records.ts          # формат і читання reports/a11y-results/*.json
+│   │   ├── format.ts           # людиночитне форматування порушень
+│   │   ├── summary.ts          # агрегація сканувань → Markdown/HTML
+│   │   └── pages-index.ts      # головна сторінка GitHub Pages
 │   ├── keyboard/focus.ts       # хелпери: tabUntil, getFocusedElementInfo, isFocusVisible
 │   └── pages/                  # Page Objects (LoginPage, InventoryPage, CartPage, ...)
 ├── tests/
-│   ├── a11y/                   # *.a11y.spec.ts — axe-сканування сторінок і станів
-│   └── keyboard/               # *.keyboard.spec.ts — навігація з клавіатури
-├── scripts/a11y-summary.ts     # JSON-результати → Markdown-зведення
+│   ├── unit/                   # *.unit.spec.ts — unit-тести хелперів (проєкт `unit`)
+│   ├── smoke/                  # *.smoke.spec.ts — шлях покупки через Page Objects
+│   ├── a11y/                   # *.a11y.spec.ts — axe-сканування сторінок і станів (лише chromium)
+│   ├── keyboard/               # *.keyboard.spec.ts — навігація з клавіатури
+│   └── support/                # спільні expect-хелпери для тестів (не Page Objects)
+├── scripts/                    # a11y-summary, baseline-update, build-pages, docs-screenshots
+├── docs/images/                # скриншоти для README (node scripts/docs-screenshots.ts)
 ├── reports/                    # згенеровані артефакти (у .gitignore)
 └── .github/workflows/a11y.yml
 ```
