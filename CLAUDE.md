@@ -68,6 +68,8 @@ npm run typecheck              # tsc --noEmit
 │   ├── smoke/                  # *.smoke.spec.ts — шлях покупки через Page Objects
 │   ├── a11y/                   # *.a11y.spec.ts — axe-сканування сторінок і станів (лише chromium)
 │   ├── keyboard/               # *.keyboard.spec.ts — навігація з клавіатури
+│   ├── media/                  # *.media.spec.ts — prefers-reduced-motion, forced-colors
+│   ├── visual/                 # *.visual.spec.ts — фокус-стани (лише chromium), еталони в __screenshots__/<platform>
 │   └── support/                # спільні expect-хелпери для тестів (не Page Objects)
 ├── scripts/                    # a11y-summary, baseline-update, build-pages, docs-screenshots
 ├── docs/images/                # скриншоти для README (node scripts/docs-screenshots.ts)

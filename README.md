@@ -13,8 +13,8 @@
 
 | Що | Результат |
 |---|---|
-| axe-core, теги `wcag2a` `wcag2aa` `wcag21a` `wcag21aa`, 7 сторінок + 7 станів UI | **0 порушень** WCAG 2.1 A/AA; 1 правило потребує ручної перевірки (перевірено, контраст ≈15:1) |
-| Клавіатурні тести (Chromium, Firefox, WebKit) + ручна перевірка | **11 проблем**, зокрема 1 Critical: користувач клавіатури **не може дістатися до кошика** і завершити покупку |
+| axe-core, теги `wcag2a` `wcag2aa` `wcag21a` `wcag21aa`: 31 сканування (7 сторінок + 7 станів UI на десктопі й на мобільному в'юпорті, 3 у режимі `forced-colors`) | **0 порушень** WCAG 2.1 A/AA; 1 правило потребує ручної перевірки (перевірено, контраст ≈15:1) |
+| Клавіатурні тести (Chromium, Firefox, WebKit), медіа-налаштування, піксельні перевірки фокуса, ручна перевірка | **12 проблем**, зокрема 1 Critical: користувач клавіатури **не може дістатися до кошика** і завершити покупку |
 
 Сайт «чистий» для автоматичного сканера, але недоступний для людини з клавіатурою. Саме тому фреймворк поєднує axe-сканування з клавіатурними тестами, а всі знахідки задокументовано в [A11Y-REPORT.md](A11Y-REPORT.md).
 
@@ -35,14 +35,14 @@
 git clone https://github.com/OWNER/REPO.git && cd REPO
 npm ci
 npx playwright install chromium firefox webkit   # на Linux/CI: --with-deps
-npm test                                          # ~3 хв: unit + axe + keyboard у 3 браузерах
+npm test                                          # ~3–4 хв: unit + axe + keyboard + media + visual
 npm run report                                    # відкрити HTML-звіт Playwright
 ```
 
 | Команда | Що робить |
 |---|---|
 | `npm test` | усі тести (unit, smoke, axe, keyboard) |
-| `npm run test:a11y` | лише axe-сканування (`tests/a11y`, Chromium) |
+| `npm run test:a11y` | лише axe-сканування (`tests/a11y`: Chromium + мобільний в'юпорт) |
 | `npm run test:keyboard` | лише клавіатурні тести (3 браузери) |
 | `npm run test:headed` | з видимим браузером |
 | `npm run a11y:summary` | `reports/a11y-summary.md` + `.html` з результатів сканувань |
@@ -74,8 +74,11 @@ src/
 tests/
 ├── unit/                      # unit-тести хелперів (без браузера) + axe-перевірка згенерованих сторінок
 ├── smoke/                     # повний шлях покупки через Page Objects
-├── a11y/                      # pages / states / baseline-guard
+├── a11y/                      # pages / states / media (forced-colors) / baseline-guard
 ├── keyboard/                  # login / inventory / menu / checkout / focus-visible
+├── media/                     # prefers-reduced-motion, фокус у forced-colors
+├── visual/                    # піксельні перевірки фокус-станів + toHaveScreenshot
+├── __screenshots__/<platform>/ # еталонні знімки фокус-станів
 └── support/                   # спільні очікування для тестів (стан меню, примітки щодо браузерів)
 scripts/                       # baseline-update, a11y-summary, build-pages, docs-screenshots
 ```
@@ -107,6 +110,14 @@ test ──► a11yScan('inventory:menu-open', { include, exclude })
 - **Реальні баги не підганяються під тест:** такий тест позначено `test.fail()` з ID з A11Y-REPORT. Після виправлення на сайті Playwright повідомить «expected to fail, but passed», і позначку треба буде прибрати. Кожен `test.fail` перевірено: він падає саме на очікуваній перевірці, а не через таймаут.
 - WebKit (як і Safari за замовчуванням) не включає посилання в Tab-послідовність, тому тести, яким це потрібно, у WebKit пропускаються з поясненням.
 
+### Мобільний в'юпорт, медіа-налаштування, візуальні перевірки
+
+- **Мобільний в'юпорт:** проєкт `mobile-chromium` (метрики `devices['iPhone 13']` на Chromium, щоб результати axe були порівнянні з десктопним baseline) повторює всі сканування сторінок і станів. Ключі отримують суфікс `@mobile` (`metadata.a11yVariant` проєкту).
+- **forced-colors:** axe-сканування з `forcedColors: 'active'` (ключі `@forced-colors`) і перевірка, що індикатор фокуса видно в режимі високого контрасту (A11Y-001).
+- **prefers-reduced-motion:** чи вимикає застосунок анімацію меню (A11Y-012) — у всіх трьох рушіях.
+- **Візуальні фокус-стани** (`tests/visual`): піксельне порівняння області до і після фокуса (не потребує еталонів, працює на будь-якій ОС) + `toHaveScreenshot` як регресійний знімок. Самоперевірка підставляє рекомендований стиль `:focus-visible` і доводить, що детектори фокуса здатні «побачити» кільце, тобто червоні A11Y-001 — це дефект сайту, а не тесту.
+- Еталонні знімки зберігаються окремо для кожної платформи (`tests/__screenshots__/<platform>/`). Наразі закомічено лише `win32`, тому в CI chromium-лег запускається з `--ignore-snapshots`. Щоб додати Linux-знімки: `docker run --rm -v "$PWD":/work -w /work mcr.microsoft.com/playwright:v1.65.1-noble npx playwright test tests/visual --update-snapshots` і закомітити `tests/__screenshots__/linux`.
+
 ## Звіти
 
 | Артефакт | Де |
@@ -124,7 +135,7 @@ test ──► a11yScan('inventory:menu-open', { include, exclude })
 `.github/workflows/a11y.yml` запускається на `push` у `main`, на `pull_request`, вручну (`workflow_dispatch`) і щотижня за розкладом (сайт живий і може змінитися):
 
 1. **lint** — `typecheck`, ESLint, Prettier.
-2. **test** — matrix `chromium` / `firefox` / `webkit`: кеш npm, `playwright install --with-deps <browser>`, blob-звіти й `reports/` як артефакти (14 днів). Chromium додатково запускає unit-тести й axe-сканування.
+2. **test** — matrix `chromium` / `firefox` / `webkit`: кеш npm, `playwright install --with-deps <browser>`, blob-звіти й `reports/` як артефакти (14 днів). Chromium додатково запускає unit-тести, axe-сканування (десктоп + мобільний) і візуальні перевірки фокуса.
 3. **summary** — `merge-reports` в один HTML/JSON-звіт, зведення axe в Job Summary, збірка `site/`.
 4. **deploy-report** (лише `main`) — `upload-pages-artifact` + `deploy-pages`.
 
@@ -137,6 +148,7 @@ test ──► a11yScan('inventory:menu-open', { include, exclude })
 ## Що я б додав далі
 
 - Окремий проєкт зі свідомо недоступним сайтом для порівняння ефективності підходу.
+- Linux-еталони фокус-станів у репозиторії та прибрати `--ignore-snapshots` з CI.
 - Перевірку на рівні нод (target-селектори) для критичних правил, наприклад `color-contrast`, на додачу до rule id.
 - Автоматичну перевірку `document.title` при SPA-навігації (A11Y-008) і зв'язку помилок із полями (A11Y-010).
 - Тести зі скрінрідером (Guidepup / NVDA) для перевірки фактичних оголошень.
