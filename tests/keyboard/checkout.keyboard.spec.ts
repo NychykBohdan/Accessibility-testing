@@ -67,9 +67,12 @@ test('checkout › empty form submitted with Enter shows a validation error', as
 }) => {
   await expect(loggedInPage.items).toHaveCount(6);
   await cartPage.goto();
+  await expect(cartPage.checkoutButton).toBeVisible();
   await tabUntil(page, byName('Checkout', 'button'));
   await page.keyboard.press('Enter');
 
+  // Wait for the next page before tabbing — focus queries during navigation are unreliable.
+  await expect(checkoutStepOnePage.firstName).toBeVisible();
   await tabUntil(page, byName('Continue', 'button'));
   await page.keyboard.press('Enter');
 

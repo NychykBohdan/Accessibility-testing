@@ -20,7 +20,11 @@ export abstract class BasePage {
     this.page = page;
   }
 
+  /**
+   * Waits for DOMContentLoaded only: on the live site a slow third-party sub-resource can delay
+   * the `load` event for 30 s+. Tests always wait for a page-specific locator afterwards.
+   */
   async goto(): Promise<void> {
-    await this.page.goto(this.path);
+    await this.page.goto(this.path, { waitUntil: 'domcontentloaded' });
   }
 }

@@ -27,7 +27,7 @@ export class ItemPage extends AuthenticatedPage {
   }
 
   async gotoItem(id: number): Promise<void> {
-    await this.page.goto(`${this.path}?id=${id}`);
+    await this.page.goto(`${this.path}?id=${id}`, { waitUntil: 'domcontentloaded' });
   }
 
   async addToCart(): Promise<void> {
