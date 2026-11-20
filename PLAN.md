@@ -124,15 +124,19 @@
 
 `.github/workflows/a11y.yml`:
 
-- [ ] Тригери: `push`, `pull_request`, `workflow_dispatch`, щотижневий `schedule`
-- [ ] Job `lint`: typecheck + lint
-- [ ] Job `test`: matrix за браузерами, кеш npm, `npx playwright install --with-deps <browser>`
-- [ ] Артефакти: `playwright-report`, `reports/` (retention 14 днів)
-- [ ] Job `summary`: зведення в Job Summary
-- [ ] Job `deploy-report` (тільки для `main`): `actions/upload-pages-artifact` + `actions/deploy-pages`,
+- [x] Тригери: `push`, `pull_request`, `workflow_dispatch`, щотижневий `schedule`
+- [x] Job `lint`: typecheck + lint
+- [x] Job `test`: matrix за браузерами, кеш npm, `npx playwright install --with-deps <browser>`
+- [x] Артефакти: `playwright-report`, `reports/` (retention 14 днів)
+- [x] Job `summary`: зведення в Job Summary
+- [x] Job `deploy-report` (тільки для `main`): `actions/upload-pages-artifact` + `actions/deploy-pages`,
       `permissions: pages: write, id-token: write`
 
 **Критерії:** pipeline зелений на `main`, звіт доступний на GitHub Pages, бейдж статусу працює.
+
+> ⏳ Перевіряється після першого push: репозиторію на GitHub ще немає. Локально відсимульовано
+> `CI=1` + blob-звіти двох браузерів → `merge-reports` → `a11y:summary` → `pages:build`.
+> Перед першим запуском: Settings → Pages → Source: **GitHub Actions**.
 
 ---
 

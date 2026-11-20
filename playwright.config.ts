@@ -9,11 +9,15 @@ export default defineConfig({
   forbidOnly: isCI,
   retries: isCI ? 2 : 0,
   workers: isCI ? 2 : undefined,
-  reporter: [
-    ['list'],
-    ['html', { open: 'never', outputFolder: 'playwright-report' }],
-    ['json', { outputFile: 'reports/results.json' }],
-  ],
+  // CI runs one job per browser and merges their blob reports into a single HTML report
+  // (`npx playwright merge-reports`); PLAYWRIGHT_BLOB_OUTPUT_NAME keeps the blob file names unique.
+  reporter: isCI
+    ? [['list'], ['blob'], ['json', { outputFile: 'reports/results.json' }]]
+    : [
+        ['list'],
+        ['html', { open: 'never', outputFolder: 'playwright-report' }],
+        ['json', { outputFile: 'reports/results.json' }],
+      ],
   use: {
     baseURL: env.baseURL,
     testIdAttribute: 'data-test',

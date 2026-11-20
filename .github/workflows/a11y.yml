@@ -1,0 +1,134 @@
+name: a11y
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Weekly run against the live site (Mondays 06:00 UTC) to catch regressions on saucedemo.com.
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: a11y-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Typecheck & lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+
+  test:
+    name: Tests (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    env:
+      PLAYWRIGHT_BLOB_OUTPUT_NAME: report-${{ matrix.browser }}.zip
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+      # The chromium job also runs the unit tests and is the only one with axe scans.
+      - name: Run tests
+        run: >-
+          npx playwright test --project=${{ matrix.browser }}
+          ${{ matrix.browser == 'chromium' && '--project=unit' || '' }}
+      - name: Upload blob report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: blob-report-${{ matrix.browser }}
+          path: blob-report
+          retention-days: 14
+      - name: Upload raw reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ matrix.browser }}
+          path: reports
+          retention-days: 14
+          if-no-files-found: ignore
+
+  summary:
+    name: Report & summary
+    needs: test
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Download blob reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: blob-report-*
+          path: all-blob-reports
+          merge-multiple: true
+      - name: Download axe scan records (chromium)
+        uses: actions/download-artifact@v4
+        with:
+          name: reports-chromium
+          path: reports
+      - name: Merge into one HTML + JSON report
+        run: npx playwright merge-reports --reporter=html,json ./all-blob-reports
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: reports/results.json
+      - name: Accessibility summary (Job Summary)
+        run: npm run a11y:summary
+      - name: Build Pages site
+        run: npm run pages:build
+      - name: Upload merged HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 14
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+          retention-days: 14
+
+  deploy-report:
+    name: Deploy report to GitHub Pages
+    needs: summary
+    if: ${{ !cancelled() && needs.summary.result == 'success' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
