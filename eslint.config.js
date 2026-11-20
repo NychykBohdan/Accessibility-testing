@@ -39,8 +39,12 @@ export default defineConfig([
       'playwright/no-focused-test': 'error',
       // Conditional skips (e.g. browser-specific behaviour) are intentional and always carry a reason.
       'playwright/no-skipped-test': ['error', { allowConditional: true }],
-      // a11yScan asserts internally (fails on new critical/serious violations).
-      'playwright/expect-expect': ['warn', { assertFunctionNames: ['a11yScan'] }],
+      // Helpers that assert internally: a11yScan fails on new critical/serious violations,
+      // tabUntil throws when the target is not reachable, expectMenu* wrap expect().
+      'playwright/expect-expect': [
+        'warn',
+        { assertFunctionNames: ['a11yScan', 'tabUntil', 'expectMenuOpen', 'expectMenuClosed'] },
+      ],
     },
   },
   prettier,

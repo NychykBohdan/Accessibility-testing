@@ -85,6 +85,8 @@ export const test = base.extend<PageFixtures, WorkerFixtures>({
     await context.addCookies(await authSession.cookies());
     const inventoryPage = new InventoryPage(page);
     await inventoryPage.goto();
+    // The SPA renders after load; keyboard tests must not start pressing Tab before that.
+    await inventoryPage.items.first().waitFor();
     await use(inventoryPage);
   },
 });

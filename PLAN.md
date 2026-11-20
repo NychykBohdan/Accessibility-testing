@@ -94,15 +94,15 @@
 
 ## Фаза 6. Клавіатурна навігація
 
-- [ ] `src/keyboard/focus.ts`: `getFocusedElementInfo()` (role, accessible name, data-test),
+- [x] `src/keyboard/focus.ts`: `getFocusedElementInfo()` (role, accessible name, data-test),
       `tabUntil(predicate, maxSteps)`, `isFocusVisible()` (outline/box-shadow у computed style)
-- [ ] `login.keyboard.spec.ts`: Tab-порядок username → password → login; вхід лише клавіатурою (Enter)
-- [ ] `inventory.keyboard.spec.ts`: додати товар у кошик з клавіатури; дістатися до кошика
-- [ ] `menu.keyboard.spec.ts`: відкрити меню Enter/Space, перевірити фокус усередині, закрити Escape,
+- [x] `login.keyboard.spec.ts`: Tab-порядок username → password → login; вхід лише клавіатурою (Enter)
+- [x] `inventory.keyboard.spec.ts`: додати товар у кошик з клавіатури; дістатися до кошика
+- [x] `menu.keyboard.spec.ts`: відкрити меню Enter/Space, перевірити фокус усередині, закрити Escape,
       фокус повертається на кнопку меню; немає keyboard trap
-- [ ] `checkout.keyboard.spec.ts`: пройти checkout повністю без миші
-- [ ] Видимість фокуса на кожному кроці
-- [ ] Реальні баги → `test.fail()` + ID з A11Y-REPORT.md
+- [x] `checkout.keyboard.spec.ts`: пройти checkout повністю без миші
+- [x] Видимість фокуса на кожному кроці
+- [x] Реальні баги → `test.fail()` + ID з A11Y-REPORT.md
 
 **Критерії:** усі сценарії або проходять, або позначені `test.fail()` з посиланням на задокументовану проблему.
 
