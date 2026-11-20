@@ -54,6 +54,8 @@ npm run report                                    # відкрити HTML-зві
 
 ## Архітектура
 
+Детальний опис того, як усе працює (життєвий цикл сканування, baseline, політика `test.fail`, CI, типові задачі): **[docs/HOW-IT-WORKS.md](docs/HOW-IT-WORKS.md)**.
+
 ```
 src/
 ├── config/env.ts              # baseURL і демо-облікові дані (перевизначаються через env)
