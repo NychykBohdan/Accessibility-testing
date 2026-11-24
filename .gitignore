@@ -7,3 +7,7 @@ site/
 .auth/
 *.log
 all-blob-reports/
+.wcag-run/
+.claude/
+docs/
+tests/
