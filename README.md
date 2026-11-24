@@ -1,8 +1,5 @@
 # Автоматизоване тестування доступності (WCAG 2.1 AA)
 
-[![a11y](https://github.com/OWNER/REPO/actions/workflows/a11y.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/a11y.yml)
-[![Report](https://img.shields.io/badge/report-GitHub%20Pages-0b5cad)](https://OWNER.github.io/REPO/)
-
 ## Головний результат
 
 | Що | Результат |
