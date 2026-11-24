@@ -88,13 +88,13 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Download blob reports
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: blob-report-*
           path: all-blob-reports
           merge-multiple: true
       - name: Download axe scan records (chromium)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: reports-chromium
           path: reports
