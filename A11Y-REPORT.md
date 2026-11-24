@@ -270,8 +270,6 @@ WebKit (як і Safari з вимкненим налаштуванням «Press 
 
 ## Перевірка скрінрідером
 
-_Розділ заповнює QA вручну (NVDA + Firefox/Chrome на Windows, VoiceOver + Safari на macOS)._
-
 Рекомендований чек-лист:
 - [ ] Логін: оголошення полів і помилки «Epic sadface…» (`role="alert"`)
 - [ ] Inventory: назва сторінки та заголовки (A11Y-008, A11Y-011), оголошення «Add to cart» → «Remove» (A11Y-006)
