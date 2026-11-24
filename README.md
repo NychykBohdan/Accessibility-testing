@@ -1,13 +1,7 @@
-# saucedemo.com — автоматизоване тестування доступності (WCAG 2.1 AA)
+# Автоматизоване тестування доступності (WCAG 2.1 AA)
 
 [![a11y](https://github.com/OWNER/REPO/actions/workflows/a11y.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/a11y.yml)
 [![Report](https://img.shields.io/badge/report-GitHub%20Pages-0b5cad)](https://OWNER.github.io/REPO/)
-
-> Після створення репозиторію замініть `OWNER/REPO` у двох рядках вище.
-
-Портфоліо-проєкт QA: фреймворк для перевірки доступності (a11y) вебзастосунку на **Playwright + axe-core**. Це не «виклик бібліотеки в одному тесті», а повний набір: фікстури, Page Objects, baseline відомих порушень, клавіатурні тести у трьох браузерах, звітність і CI з публікацією звіту на GitHub Pages.
-
-**Об'єкт тестування:** https://www.saucedemo.com (публічний демо-магазин, користувач `standard_user` / `secret_sauce`).
 
 ## Головний результат
 
@@ -22,22 +16,6 @@
 |---|---|
 | ![Кнопка у фокусі без видимого індикатора](docs/images/focus-actual.png) | ![Кнопка у фокусі з чіткою рамкою](docs/images/focus-expected.png) |
 
-## Стек
-
-- Node.js 22.18+ (скрипти `scripts/*.ts` запускаються нативно, без `tsx`), TypeScript strict
-- `@playwright/test` 1.65, `@axe-core/playwright` / `axe-core` 4.14
-- ESLint (`typescript-eslint` type-checked, `eslint-plugin-playwright`), Prettier
-- GitHub Actions (matrix за браузерами) + GitHub Pages
-
-## Швидкий старт
-
-```bash
-git clone https://github.com/OWNER/REPO.git && cd REPO
-npm ci
-npx playwright install chromium firefox webkit   # на Linux/CI: --with-deps
-npm test                                          # ~3–4 хв: unit + axe + keyboard + media + visual
-npm run report                                    # відкрити HTML-звіт Playwright
-```
 
 | Команда | Що робить |
 |---|---|
@@ -51,39 +29,6 @@ npm run report                                    # відкрити HTML-зві
 | `npm run typecheck` / `lint` / `format` | статичні перевірки |
 
 Змінні оточення (необов'язкові): `BASE_URL`, `SAUCE_USERNAME`, `SAUCE_PASSWORD`, `SAUCE_LOCKED_USERNAME`.
-
-## Архітектура
-
-Детальний опис того, як усе працює (життєвий цикл сканування, baseline, політика `test.fail`, CI, типові задачі): **[docs/HOW-IT-WORKS.md](docs/HOW-IT-WORKS.md)**.
-
-```
-src/
-├── config/env.ts              # baseURL і демо-облікові дані (перевизначаються через env)
-├── pages/                     # Page Objects: лише локатори й дії, без expect
-│   ├── BasePage.ts            # path, goto(), a11yExclude — виключення для axe живуть тут
-│   ├── AuthenticatedPage.ts   # спільна шапка: бургер-меню, кошик
-│   └── components/BurgerMenu.ts
-├── fixtures/pages.fixture.ts  # фікстури Page Objects + loggedInPage (UI-логін раз на воркер)
-├── a11y/
-│   ├── axe.fixture.ts         # makeAxeBuilder (єдине місце з тегами WCAG) + a11yScan
-│   ├── scan.ts                # запуск axe → порівняння з baseline → анотації → assert
-│   ├── baseline.ts            # new / known / fixed, детермінований формат файлу
-│   ├── records.ts             # запис reports/a11y-results/<scanKey>.json
-│   ├── format.ts              # людиночитні повідомлення про порушення
-│   ├── summary.ts             # агрегація → Markdown / HTML
-│   └── pages-index.ts         # головна сторінка GitHub Pages
-└── keyboard/focus.ts          # tabUntil, getFocusedElementInfo, isFocusVisible, auditFocusIndicators
-tests/
-├── unit/                      # unit-тести хелперів (без браузера) + axe-перевірка згенерованих сторінок
-├── smoke/                     # повний шлях покупки через Page Objects
-├── a11y/                      # pages / states / media (forced-colors) / baseline-guard
-├── keyboard/                  # login / inventory / menu / checkout / focus-visible
-├── media/                     # prefers-reduced-motion, фокус у forced-colors
-├── visual/                    # піксельні перевірки фокус-станів + toHaveScreenshot
-├── __screenshots__/<platform>/ # еталонні знімки фокус-станів
-└── support/                   # спільні очікування для тестів (стан меню, примітки щодо браузерів)
-scripts/                       # baseline-update, a11y-summary, build-pages, docs-screenshots
-```
 
 ### Як працює сканування
 
@@ -132,26 +77,7 @@ test ──► a11yScan('inventory:menu-open', { include, exclude })
 
 ![Зведення axe](docs/images/a11y-summary.png)
 
-## CI/CD
-
-`.github/workflows/a11y.yml` запускається на `push` у `main`, на `pull_request`, вручну (`workflow_dispatch`) і щотижня за розкладом (сайт живий і може змінитися):
-
-1. **lint** — `typecheck`, ESLint, Prettier.
-2. **test** — matrix `chromium` / `firefox` / `webkit`: кеш npm, `playwright install --with-deps <browser>`, blob-звіти й `reports/` як артефакти (14 днів). Chromium додатково запускає unit-тести, axe-сканування (десктоп + мобільний) і візуальні перевірки фокуса.
-3. **summary** — `merge-reports` в один HTML/JSON-звіт, зведення axe в Job Summary, збірка `site/`.
-4. **deploy-report** (лише `main`) — `upload-pages-artifact` + `deploy-pages`.
-
-Перед першим запуском: **Settings → Pages → Source: GitHub Actions**. Retries: 2 у CI, 0 локально. У menu-спеку retries увімкнено завжди, бо фокус у меню керується нестабільно на боці застосунку (A11Y-003), тож такі прогони в звіті позначаються як flaky, а не приховуються.
-
 ## Обмеження
 
 Автоматизація не замінює ручного аудиту: axe знаходить лише частину проблем, а скрінрідерна перевірка проводиться вручну. Детальніше — у розділі [«Обмеження автоматизації»](A11Y-REPORT.md#обмеження-автоматизації) звіту.
 
-## Що я б додав далі
-
-- Окремий проєкт зі свідомо недоступним сайтом для порівняння ефективності підходу.
-- Linux-еталони фокус-станів у репозиторії та прибрати `--ignore-snapshots` з CI.
-- Перевірку на рівні нод (target-селектори) для критичних правил, наприклад `color-contrast`, на додачу до rule id.
-- Автоматичну перевірку `document.title` при SPA-навігації (A11Y-008) і зв'язку помилок із полями (A11Y-010).
-- Тести зі скрінрідером (Guidepup / NVDA) для перевірки фактичних оголошень.
-- Створення GitHub Issue з нового порушення в CI за розкладом.
